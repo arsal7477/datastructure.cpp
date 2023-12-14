@@ -102,6 +102,67 @@ public:
         return root;
     }
 
+node* minnode(node* root){
+    while(root->left!=nullptr){
+        root=root->left;}
+    return root;
+}
+    node* deletenode(node* root,int val){
+        if(root==nullptr){
+            return root;
+        }
+        if(val<root->data){
+            root->left=deletenode(root->left,val);
+
+        }
+        else if(val>root->data){
+            root->right=deletenode(root->right,val);
+        }
+        else{
+            if(root->left==nullptr){
+                node* temp=root;
+                root=root->right;
+                delete temp;
+                
+            }
+            else if(root->right==nullptr){
+               node* temp =root;
+               root=root->left;
+               delete temp;
+            }
+
+            else{
+                node* temp=minnode(root->right);
+                root->data=temp->data;
+                root->right=deletenode(root->right,temp->data);
+
+            }
+        }
+        if(root==nullptr){
+            return root;
+        }
+        root->height=1+max(height(root->left),height(root->right));
+        int balancefactor=getbalance(root);
+
+        if(balancefactor>1 && getbalance(root->left)>=0){
+            return rightrotate(root);
+        }
+        if(balancefactor>1 && getbalance(root->left)<0){
+            root->left=leftrotate(root->left);
+            return rightrotate(root);
+
+        }
+        if(balancefactor<-1 && getbalance(root->right)<=0)
+        {
+            return leftrotate(root);
+        }
+        if(balancefactor<-1 && getbalance(root->right)>0){
+            root->right=rightrotate(root->right);
+            return leftrotate(root);
+        }
+    return root;
+
+    }
     void preorder(node* root) {
         if (root != nullptr) {
             cout << root->data << " ";
@@ -121,6 +182,7 @@ int main() {
     root = insert(root, 5);
     root = insert(root, 6);
 
+    root=deletenode(root,5);
     // Print the AVL tree in preorder
     cout << "Preorder Traversal: ";
     preorder(root);
