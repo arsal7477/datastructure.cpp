@@ -1,0 +1,92 @@
+// Class Declaration: Book
+class book{
+    public:
+    string title;
+    string author;
+    int isbn;
+
+    book* next;
+    book* prev;
+
+    book(string ti,string au,int num){
+        title=ti;
+        author=au;
+        isbn=num;
+        next=nullptr;
+        prev=nullptr;
+    }
+};
+
+// Function to Add a Book
+void addbook(book* &head,string ti,string au,int num){
+    book* newbook=new book(ti,au,num);
+
+    if(head==nullptr){
+        head=newbook;
+        head->prev=nullptr;
+        return;
+    }
+    newbook->next=head;
+    head->prev=newbook;
+    head=newbook;
+}
+
+// Function to Remove a Book
+void removebook(book* &head, int num) {
+    book* temp = head;
+
+    // If head node itself holds the isbn to be deleted
+    if (temp != nullptr && temp->isbn == num) {
+        head = temp->next;
+        if(head != nullptr)
+            head->prev = nullptr;
+        delete temp;
+        return;
+    }
+
+    // Find the node with the given isbn
+    while (temp != nullptr && temp->isbn != num) {
+        temp = temp->next;
+    }
+
+    // If the node is not found
+    if (temp == nullptr) {
+        cout << "Book with isbn " << num << " not found." << endl;
+        return;
+    }
+
+    // Update the next and previous pointers of the adjacent nodes
+    if(temp->prev != nullptr)
+        temp->prev->next = temp->next;
+    if (temp->next != nullptr) {
+        temp->next->prev = temp->prev;
+    }
+
+    // Delete the node
+    delete temp;
+}
+
+// Function to Display Books
+void display(book* head){
+    book* temp=head;
+
+    while(temp!=nullptr){
+        cout<<temp->title<<" "<<temp->author<<" "<<temp->isbn<<" "<<endl;
+         temp=temp->next;
+    }
+    cout<<endl;
+}
+
+int main(){
+    book* head=nullptr;
+
+    addbook(head,"c++","abc",123);
+    addbook(head,"py","aaa",222 );
+    addbook(head,"as","wddca",862 );
+
+    removebook(head,267);
+
+    display(head);
+
+    return 0;
+}
