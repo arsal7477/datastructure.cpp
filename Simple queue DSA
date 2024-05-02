@@ -1,1 +1,100 @@
+#include<iostream>
+using namespace std;
+
+class node{
+public:
+    int data;
+    node* next;
+
+    // Constructor to initialize node with given value
+    node(int val){
+        data = val;
+        next = nullptr;
+    }
+};
+
+class queue{
+    node* front; // Pointer to the front of the queue
+    node* rear;  // Pointer to the rear of the queue
+public:
+    // Constructor to initialize queue with empty state
+    queue(){
+        front = nullptr;
+        rear = nullptr;
+    }
+
+    // Destructor to deallocate memory for all nodes in the queue
+    ~queue(){
+        while(front != nullptr){
+            node* temp = front;
+            front = front->next;
+            delete temp;
+        }
+    }
+
+    // Function to add an element to the rear of the queue
+    void enqueue(int val){
+        node* newnode = new node(val);
+        if(front == nullptr){
+            front = rear = newnode;
+        }
+        else{
+            rear->next = newnode;
+            rear = newnode;
+        }
+    }
+
+    // Function to remove an element from the front of the queue
+    void dequeue(){
+        if(front != nullptr){
+            node* temp = front;
+            front = front->next;
+            delete temp;
+        }
+        if(front == nullptr){
+            rear = nullptr;
+        }
+    }
+
+    // Function to display the elements of the queue
+    void display() {
+        node* temp = front;
+        while (temp != nullptr) {
+            cout << temp->data << "->";
+            temp = temp->next;
+        }
+        cout << "nullptr";
+        cout << endl;
+    }
+
+    // Function to search for an element in the queue
+    int search(int key){
+        node* temp = front;
+        while(temp != nullptr){
+            if(temp->data == key){
+                return key;
+            }
+            temp = temp->next;
+        }
+        return -1;
+    }
+};
+
+int main(){
+    queue q;
+    q.enqueue(2);
+    q.enqueue(4);
+    q.enqueue(7);
+    q.enqueue(9);
+
+    q.display();
+
+    q.dequeue();
+
+    q.display();
+    cout << q.search(8) << endl; // Output should be -1 (not found)
+    cout << q.search(7) << endl; // Output should be 7 (found)
+
+    return 0;
+}
 
